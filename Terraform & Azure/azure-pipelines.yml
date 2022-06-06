@@ -1,26 +1,26 @@
 resources:
   repositories:
     - repository: templates
-      name: jmboutou/templates
+      name: CICD/Terraform & Azure/templates
       type: git
 
 jobs: 
 - template: terraform-validate.yml@templates
   parameters:
     terraformVersion: 'latest'
-    serviceprincipal: 'az-sconnection'
-    resourcegroup: 'rg-azdvo'
-    storageAccountName: 'stazdvo'
-    storageContainerName: 'stcontainer'
+    serviceprincipal: 'Nom de votre Service Principal'
+    resourcegroup: 'Nom du Resource Group'
+    storageAccountName: 'Nom du Storage Account'
+    storageContainerName: 'Nom de votre Container'
     storageKey: 'terraform.tfstate'
 
 - template: terraform-deploy.yml@templates
   parameters:
     terraformVersion: 'latest'
-    serviceprincipal: 'az-sconnection'
-    resourcegroup: 'rg-azdvo'
-    storageAccountName: 'stazdvo'
-    storageContainerName: 'stcontainer'
+    serviceprincipal: 'Nom de votre Service Principal'
+    resourcegroup: 'Nom du Resource Group'
+    storageAccountName: 'Nom du Storage Account'
+    storageContainerName: 'Nom de votre Container'
     storageKey: 'terraform.tfstate'
     deployEnv: 'dev'
 
