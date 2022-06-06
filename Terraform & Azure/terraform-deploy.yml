@@ -1,0 +1,46 @@
+parameters:
+  terraformVersion: ''
+  serviceprincipal: ''
+  resourcegroup: ''
+  storageAccountName: ''
+  storageContainerName: ''
+  storageKey: ''
+  deployEnv: ''
+
+jobs:
+- deployment: deploy_terraform
+  continueOnError: false
+  environment: ${{ parameters.deployEnv }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+          - checkout: self
+          - task: TerraformInstaller@0
+            displayName: 'install'
+            inputs:
+              terraformVersion: ${{ parameters.terraformVersion }}
+          - task: TerraformCLI@0
+            displayName: 'init'
+            inputs:
+              command: 'init'
+              backendType: 'azurerm'
+              backendServiceArm: ${{ parameters.serviceprincipal }}
+              backendAzureRmResourceGroupName: '${{ parameters.resourcegroup }}'
+              backendAzureRmStorageAccountName: '${{ parameters.storageAccountName }}'
+              backendAzureRmContainerName: '${{ parameters. storageContainerName }}'
+              backendAzureRmKey: '${{ parameters.storageKey }}'
+              allowTelemetryCollection: false
+          - task: TerraformCLI@0
+            displayName: 'plan'
+            inputs:
+              command: 'plan'
+              environmentServiceName: ${{ parameters.serviceprincipal }}
+              allowTelemetryCollection: false
+          - task: TerraformCLI@0
+            displayName: 'apply'
+            inputs:
+              command: 'apply'
+              environmentServiceName: ${{ parameters.serviceprincipal }}
+              commandOptions: -auto-approve
+              allowTelemetryCollection: false
